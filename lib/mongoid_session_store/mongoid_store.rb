@@ -6,24 +6,24 @@ module ActionDispatch
         include Mongoid::Document
         include Mongoid::Timestamps
 
-        unless ActionDispatch::Session::MongoidStore.database.nil?
-          set_database ActionDispatch::Session::MongoidStore.database
-        end
-        store_in :collection => 'sessions'
-
         field :_id, :type => String
         field :data, :type => String, :default => [Marshal.dump({})].pack("m*")
 
         attr_accessible :id
+
+        # Set options
+        def self.set_options(options)
+          store_in options
+        end
       end
 
       # The class used for session storage.
       cattr_accessor :session_class
-      cattr_accessor :database
       self.session_class = Session
 
       SESSION_RECORD_KEY = 'rack.session.record'
       ENV_SESSION_OPTIONS_KEY = Rack::Session::Abstract::ENV_SESSION_OPTIONS_KEY if ::Rails.version >= "3.1"
+
 
       private
 
