@@ -4,7 +4,11 @@ module ActionDispatch
 
       class Session
         include Mongoid::Document
+        include Mongoid::Timestamps
 
+        unless ActionDispatch::Session::MongoidStore.database.nil?
+          set_database ActionDispatch::Session::MongoidStore.database
+        end
         store_in :collection => 'sessions'
 
         field :_id, :type => String
@@ -15,6 +19,7 @@ module ActionDispatch
 
       # The class used for session storage.
       cattr_accessor :session_class
+      cattr_accessor :database
       self.session_class = Session
 
       SESSION_RECORD_KEY = 'rack.session.record'
