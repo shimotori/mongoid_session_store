@@ -12,7 +12,9 @@ module ActionDispatch
         attr_accessible :id
 
         # Set options
-        def self.set_options(options)
+        def self.set_options(new_options)
+          options = {collection: 'sessions'}
+          options.merge! new_options
           store_in options
         end
       end
